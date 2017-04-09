@@ -6,13 +6,18 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 
+import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
+import com.udacity.stockhawk.utils.NetworkUtils;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -37,6 +42,14 @@ public final class QuoteSyncJob {
     private static final int PERIODIC_ID = 1;
     private static final int YEARS_OF_HISTORY = 2;
 
+    //Error Codes
+    public static final int STOCK_STATUS_OK = 0;
+    public static final int STOCK_STATUS_SERVER_DOWN = 1;
+    public static final int STOCK_STATUS_SERVER_INVALID = 2;
+    public static final int STOCK_STATUS_UNKNOWN = 3;
+    public static final int STOCK_STATUS_INVALID = 4;
+    public static final int STOCK_STATUS_EMPTY = 5;
+
     private QuoteSyncJob() {
     }
 
@@ -58,6 +71,7 @@ public final class QuoteSyncJob {
             Timber.d(stockCopy.toString());
 
             if (stockArray.length == 0) {
+                setStockStatus(context, STOCK_STATUS_EMPTY);
                 return;
             }
 
@@ -73,6 +87,7 @@ public final class QuoteSyncJob {
 
 
                 Stock stock = quotes.get(symbol);
+                //TODO: if stock is null then does not exists
                 StockQuote quote = stock.getQuote();
 
                 float price = quote.getPrice().floatValue();
@@ -145,10 +160,7 @@ public final class QuoteSyncJob {
 
     public static synchronized void syncImmediately(Context context) {
 
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
+        if (NetworkUtils.isNetworkUp(context)) {
             Intent nowIntent = new Intent(context, QuoteIntentService.class);
             context.startService(nowIntent);
         } else {
@@ -168,5 +180,16 @@ public final class QuoteSyncJob {
         }
     }
 
+    static private void setStockStatus(Context c, @StockStatus int setStockStatus) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(c.getString(R.string.pref_stock_status_key), setStockStatus);
+        spe.commit();
+    }
 
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({STOCK_STATUS_OK, STOCK_STATUS_SERVER_DOWN, STOCK_STATUS_SERVER_INVALID, STOCK_STATUS_INVALID, STOCK_STATUS_UNKNOWN, STOCK_STATUS_EMPTY})
+    public @interface StockStatus {
+    }
 }
