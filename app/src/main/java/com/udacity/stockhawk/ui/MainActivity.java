@@ -16,6 +16,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -89,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements
         adapter = new StockAdapter(this, this);
         stockRecyclerView.setAdapter(adapter);
         stockRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView.ItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        stockRecyclerView.addItemDecoration(dividerItemDecoration);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (savedInstanceState == null) {
