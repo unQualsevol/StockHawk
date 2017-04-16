@@ -47,5 +47,8 @@
     <string name="stock_no_change_cd">Stock value without change</string>
     <string name="try_again">Try again</string>
     <string name="stock_price_cd">Stock price %1$s</string>
+    <string name="widget_cd">Stock Hawk widget</string>
 
+    <!-- Widget -->
+    <string name="widget_label">Stock Details</string>
 </resources>
