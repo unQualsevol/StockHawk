@@ -12,11 +12,11 @@
         <item name="popupTheme">@style/Theme.AppCompat.Light</item>
     </style>
 
-    <style name="BidPriceTextStyle" parent="Base.TextAppearance.AppCompat.Large">
+    <style name="BidPriceTextStyle" parent="Base.TextAppearance.AppCompat.Subhead">
         <item name="android:textColor">@color/textColorSecondary</item>
     </style>
 
-    <style name="PercentChangeTextStyle" parent="Base.TextAppearance.AppCompat.Large">
+    <style name="PercentChangeTextStyle" parent="Base.TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>

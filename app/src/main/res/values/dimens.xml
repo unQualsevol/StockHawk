@@ -3,4 +3,10 @@
     <dimen name="actionbar_elevation">4dp</dimen>
     <dimen name="stock_dialog_margin">4dp</dimen>
     <dimen name="stock_dialog_margin_top">16dp</dimen>
+
+    <dimen name="widget_min_width">216dp</dimen>
+    <dimen name="widget_min_height">180dp</dimen>
+    <dimen name="widget_min_resize_width">216dp</dimen>
+    <dimen name="widget_min_resize_height">110dp</dimen>
+    <dimen name="widget_margin">8dp</dimen>
 </resources>
