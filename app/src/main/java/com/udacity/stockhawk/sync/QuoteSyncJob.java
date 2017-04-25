@@ -198,7 +198,7 @@ public final class QuoteSyncJob {
             historyBuilder.append(it.getClose());
             historyBuilder.append("\n");
         }
-        return null;
+        return historyBuilder.toString();
     }
 
     public static void updateWidget(Context context) {

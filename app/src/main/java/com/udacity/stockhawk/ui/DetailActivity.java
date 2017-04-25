@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.udacity.stockhawk.R;
-import com.udacity.stockhawk.data.PrefUtils;
 import com.udacity.stockhawk.model.Stock;
 
 import java.lang.annotation.Retention;
@@ -64,11 +63,6 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        if (savedInstanceState != null) {
-            //TODO: restore status
-        }
 
 
         Intent intentThatStartedThisActivity = getIntent();

@@ -17,6 +17,7 @@
     <string name="period_weekly_key" translatable="false">period_weekly</string>
     <string name="period_value_key" translatable="false">period_value</string>
     <string name="stock_data_key" translatable="false">stock_data_key</string>
+    <string name="stock_layout_manager_status_key" translatable="false">stock_layout_manager_status_key</string>
 
     <!-- DEFAULT STOCKS -->
     <string name="default_stocks_yahoo">YHOO</string>
