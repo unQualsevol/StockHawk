@@ -11,6 +11,12 @@
     <string name="pref_display_mode_percentage_key" translatable="false">percentage</string>
     <string name="pref_stock_status_key" translatable="false">STOCK_STATUS</string>
     <string name="stock_dialog_fragment_name" translatable="false">StockDialogFragment</string>
+    <string name="fragment_period_key" translatable="false">fragment_period_key</string>
+    <string name="period_monthly_key" translatable="false">period_monthly</string>
+    <string name="period_daily_key" translatable="false">period_daily</string>
+    <string name="period_weekly_key" translatable="false">period_weekly</string>
+    <string name="period_value_key" translatable="false">period_value</string>
+    <string name="stock_data_key" translatable="false">stock_data_key</string>
 
     <!-- DEFAULT STOCKS -->
     <string name="default_stocks_yahoo">YHOO</string>
@@ -38,7 +44,7 @@
     <string name="loading_data">Loading data. Please wait…</string>
     <string name="stock_already_included">Stock %1$s already included.</string>
 
-    <!-- Content descriptions -->
+    <!-- CONTENT DESCRIPTIONS -->
     <string name="add_new_stock_cd">Add new Stock</string>
     <string name="toogle_display_mode_cd">Toggle values between absolute and percentage values</string>
     <string name="toogle_display_mode_notice_cd">Values are shown as %s</string>
@@ -48,7 +54,19 @@
     <string name="try_again">Try again</string>
     <string name="stock_price_cd">Stock price %1$s</string>
     <string name="widget_cd">Stock Hawk widget</string>
+    <string name="days_fragment_title">5 days</string>
+    <string name="weeks_fragment_title">5 weeks</string>
+    <string name="months_fragment_title">5 months</string>
+    <string name="stock_detail_activity_cd">Stock details of %1$s</string>
+    <string name="day_highest_cd">Today\'s lowest stock value %1$s</string>
+    <string name="day_lowest_cd">Today\'s lowest stock value %1$s</string>
+
+    <!-- TRANSITIONS -->
+    <string name="stock_price_transition_name" translatable="false">stock_price_transaction</string>
+    <string name="stock_change_transition_name" translatable="false">stock_change_transaction</string>
+    <string name="stock_transition_name" translatable="false">stock_transaction</string>
 
     <!-- Widget -->
     <string name="widget_label">Stock Details</string>
+
 </resources>

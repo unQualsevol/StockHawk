@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
+import com.udacity.stockhawk.model.Stock;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -51,6 +52,24 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
         cursor.moveToPosition(position);
         return cursor.getString(Contract.Quote.POSITION_SYMBOL);
+    }
+
+    Stock getDataAtPosition(int position) {
+        cursor.moveToPosition(position);
+        Stock stock = new Stock();
+        stock.setId(cursor.getInt(Contract.Quote.POSITION_ID));
+        stock.setSymbol(cursor.getString(Contract.Quote.POSITION_SYMBOL));
+        stock.setPrice(cursor.getFloat(Contract.Quote.POSITION_PRICE));
+        stock.setAbsoluteChange(cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE));
+        stock.setPercentageChange(cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE));
+        stock.setMonthHistory(cursor.getString(Contract.Quote.POSITION_DAILY_HISTORY));
+        stock.setWeekHistory(cursor.getString(Contract.Quote.POSITION_WEEKLY_HISTORY));
+        stock.setDayHistory(cursor.getString(Contract.Quote.POSITION_MONTHLY_HISTORY));
+        stock.setStockExchange(cursor.getString(Contract.Quote.POSITION_STOCK_EXCHANGE));
+        stock.setStockName(cursor.getString(Contract.Quote.POSITION_STOCK_NAME));
+        stock.setDayHighest(cursor.getFloat(Contract.Quote.POSITION_DAY_HIGHEST));
+        stock.setDayLowest(cursor.getFloat(Contract.Quote.POSITION_DAY_LOWEST));
+        return stock;
     }
 
     @Override
@@ -115,7 +134,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
 
     interface StockAdapterOnClickHandler {
-        void onClick(String symbol);
+        void onClick(StockViewHolder viewHolder, Stock data);
     }
 
     class StockViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -138,10 +157,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            cursor.moveToPosition(adapterPosition);
-            int symbolColumn = cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL);
-            clickHandler.onClick(cursor.getString(symbolColumn));
-
+            clickHandler.onClick(this, getDataAtPosition(adapterPosition));
         }
 
 

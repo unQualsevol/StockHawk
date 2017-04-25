@@ -7,13 +7,17 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -30,6 +34,7 @@ import android.widget.TextView;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
+import com.udacity.stockhawk.model.Stock;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
 import com.udacity.stockhawk.utils.NetworkUtils;
 
@@ -73,8 +78,16 @@ public class MainActivity extends AppCompatActivity implements
     };
 
     @Override
-    public void onClick(String symbol) {
-        Timber.d("Symbol clicked: %s", symbol);
+    public void onClick(StockAdapter.StockViewHolder viewHolder, Stock data) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(getString(R.string.stock_data_key), data);
+        Pair<View, String> priceViewPair = Pair.create((View) viewHolder.price, getString(R.string.stock_price_transition_name));
+        Pair<View, String> changeViewPair = Pair.create((View) viewHolder.change, getString(R.string.stock_change_transition_name));
+        Pair<View, String> cardViewPair = Pair.create(viewHolder.itemView, getString(R.string.stock_transition_name));
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this, priceViewPair, changeViewPair, cardViewPair);
+
+        ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
     }
 
     @Override

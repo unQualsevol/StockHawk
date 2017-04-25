@@ -101,24 +101,36 @@ public final class QuoteSyncJob {
                 }
                 StockQuote quote = stock.getQuote();
 
+                String stockName = stock.getName();
+                String exchangeName = stock.getStockExchange();
+
                 float price = quote.getPrice().floatValue();
                 float change = quote.getChange().floatValue();
                 float percentChange = quote.getChangeInPercent().floatValue();
 
+                float dayHighest = (quote.getDayHigh() == null)? -1: quote.getDayHigh().floatValue();
+                float dayLowest = (quote.getDayLow() == null)? -1: quote.getDayLow().floatValue();
+
                 // WARNING! Don't request historical data for a stock that doesn't exist!
                 // The request will hang forever X_x
 
-                StringBuilder historyBuilder = new StringBuilder();
+                String dailyHistory;
+                String weeklyHistory;
+                String monthlyHistory;
                 // don't know why for SSS get history fails x_X
                 try {
-                    List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
 
-                    for (HistoricalQuote it : history) {
-                        historyBuilder.append(it.getDate().getTimeInMillis());
-                        historyBuilder.append(", ");
-                        historyBuilder.append(it.getClose());
-                        historyBuilder.append("\n");
-                    }
+                    from = Calendar.getInstance();
+                    from.add(Calendar.DAY_OF_YEAR, -5);
+                    dailyHistory = getHistory(stock, from, to, Interval.DAILY);
+
+                    from = Calendar.getInstance();
+                    from.add(Calendar.DAY_OF_YEAR, -35);
+                    weeklyHistory = getHistory(stock, from, to, Interval.WEEKLY);
+
+                    from = Calendar.getInstance();
+                    from.add(Calendar.MONTH, -4);
+                    monthlyHistory = getHistory(stock, from, to, Interval.MONTHLY);
                 } catch (IOException ioe) {
                     invalid = symbol;
                     continue;
@@ -129,9 +141,13 @@ public final class QuoteSyncJob {
                 quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
                 quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
                 quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
-
-
-                quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
+                quoteCV.put(Contract.Quote.COLUMN_DAILY_HISTORY, dailyHistory);
+                quoteCV.put(Contract.Quote.COLUMN_WEEKLY_HISTORY, weeklyHistory);
+                quoteCV.put(Contract.Quote.COLUMN_MONTHLY_HISTORY, monthlyHistory);
+                quoteCV.put(Contract.Quote.COLUMN_DAY_HIGHEST, dayHighest);
+                quoteCV.put(Contract.Quote.COLUMN_DAY_LOWEST, dayLowest);
+                quoteCV.put(Contract.Quote.COLUMN_STOCK_NAME, stockName);
+                quoteCV.put(Contract.Quote.COLUMN_STOCK_EXCHANGE, exchangeName);
 
                 quoteCVs.add(quoteCV);
 
@@ -160,6 +176,29 @@ public final class QuoteSyncJob {
         } finally {
             updateWidget(context);
         }
+    }
+
+    private static String getHistory(Stock stock, Calendar from, Calendar to, Interval interval) throws IOException {
+
+        List<HistoricalQuote> history = stock.getHistory(from, to, interval);
+
+        // time to time it returns less than 5 results, for example:
+        // to solve that I tried to retrieve history more times and seems to work
+//        if (interval.equals(Interval.DAILY)) {
+//            while (history.size() < 5) {
+//                history = stock.getHistory(from, to, interval);
+//                from.add(Calendar.DAY_OF_YEAR, -1);
+//            }
+//        }
+
+        StringBuilder historyBuilder = new StringBuilder();
+        for (HistoricalQuote it : history) {
+            historyBuilder.append(it.getDate().getTimeInMillis());
+            historyBuilder.append(", ");
+            historyBuilder.append(it.getClose());
+            historyBuilder.append("\n");
+        }
+        return null;
     }
 
     public static void updateWidget(Context context) {
