@@ -70,4 +70,9 @@
     <!-- Widget -->
     <string name="widget_label">Stock Details</string>
 
+    <!-- date formats -->
+    <string name="day_month_format" translatable="false">dd/MM</string>
+    <string name="month_name_format" translatable="false">MMM</string>
+    <string name="marker_text">%1$s on %2$s</string>
+
 </resources>

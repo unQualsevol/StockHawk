@@ -5,7 +5,7 @@
     tools:context="com.udacity.stockhawk.ui.DetailFragment">
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
+        android:id="@+id/lc_stock_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

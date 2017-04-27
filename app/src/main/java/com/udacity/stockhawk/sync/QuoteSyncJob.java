@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
@@ -77,7 +78,7 @@ public final class QuoteSyncJob {
                 return;
             }
 
-            Map<String, Stock> quotes = YahooFinance.get(stockArray);
+            Map<String, Stock> quotes = YahooFinance.get(stockArray, true);
 
             if (quotes.isEmpty()) {
                 setStockStatus(context, STOCK_STATUS_SERVER_DOWN);
@@ -182,14 +183,15 @@ public final class QuoteSyncJob {
 
         List<HistoricalQuote> history = stock.getHistory(from, to, interval);
 
-        // time to time it returns less than 5 results, for example:
-        // to solve that I tried to retrieve history more times and seems to work
-//        if (interval.equals(Interval.DAILY)) {
-//            while (history.size() < 5) {
-//                history = stock.getHistory(from, to, interval);
-//                from.add(Calendar.DAY_OF_YEAR, -1);
-//            }
-//        }
+        // time to time it returns less than 5 results, for example: FB
+        // to solve that I tried to retrieve history more times increasing
+        // the period and seems it works
+        if (interval.equals(Interval.DAILY)) {
+            while (history.size() < 5) {
+                history = stock.getHistory(from, to, interval);
+                from.add(Calendar.DAY_OF_YEAR, -1);
+            }
+        }
 
         StringBuilder historyBuilder = new StringBuilder();
         for (HistoricalQuote it : history) {
@@ -197,6 +199,9 @@ public final class QuoteSyncJob {
             historyBuilder.append(", ");
             historyBuilder.append(it.getClose());
             historyBuilder.append("\n");
+        }
+        if(historyBuilder.length() > 0) {
+            historyBuilder.deleteCharAt(historyBuilder.length() - 1);
         }
         return historyBuilder.toString();
     }

@@ -62,9 +62,9 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         stock.setPrice(cursor.getFloat(Contract.Quote.POSITION_PRICE));
         stock.setAbsoluteChange(cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE));
         stock.setPercentageChange(cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE));
-        stock.setMonthHistory(cursor.getString(Contract.Quote.POSITION_DAILY_HISTORY));
+        stock.setDayHistory(cursor.getString(Contract.Quote.POSITION_DAILY_HISTORY));
         stock.setWeekHistory(cursor.getString(Contract.Quote.POSITION_WEEKLY_HISTORY));
-        stock.setDayHistory(cursor.getString(Contract.Quote.POSITION_MONTHLY_HISTORY));
+        stock.setMonthHistory(cursor.getString(Contract.Quote.POSITION_MONTHLY_HISTORY));
         stock.setStockExchange(cursor.getString(Contract.Quote.POSITION_STOCK_EXCHANGE));
         stock.setStockName(cursor.getString(Contract.Quote.POSITION_STOCK_NAME));
         stock.setDayHighest(cursor.getFloat(Contract.Quote.POSITION_DAY_HIGHEST));
