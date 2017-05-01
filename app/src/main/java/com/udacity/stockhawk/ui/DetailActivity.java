@@ -144,13 +144,13 @@ public class DetailActivity extends AppCompatActivity {
         mViewPager.setOffscreenPageLimit(PAGE_BUFFER);
     }
 
-    private DetailFragment buildDetailFragment(@PeriodKeys int periodTypeKey, String periodValue) {
-        DetailFragment detailFragment = new DetailFragment();
+    private StockHistoryFragment buildDetailFragment(@PeriodKeys int periodTypeKey, String periodValue) {
+        StockHistoryFragment stockHistoryFragment = new StockHistoryFragment();
         Bundle bundle = new Bundle();
         bundle.putString(getString(R.string.fragment_period_key), getString(periodTypeKey));
         bundle.putString(getString(R.string.period_value_key), periodValue);
-        detailFragment.setArguments(bundle);
-        return detailFragment;
+        stockHistoryFragment.setArguments(bundle);
+        return stockHistoryFragment;
     }
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {

@@ -28,7 +28,7 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailFragment extends Fragment {
+public class StockHistoryFragment extends Fragment {
 
     private String fragmentDataType;
     private String historyData;
