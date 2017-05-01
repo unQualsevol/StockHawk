@@ -59,7 +59,6 @@ public class DetailFragment extends Fragment {
     }
 
     private void configureLineChart() {
-        Log.d(DetailFragment.class.getSimpleName(), "Period: "+ fragmentDataType+" Data: "+historyData);
         List<Entry> dataPairs = getFormattedStockHistory(historyData);
         LineDataSet dataSet = new LineDataSet(dataPairs, "");
         dataSet.setColor(color);
