@@ -40,7 +40,6 @@ public class StockHistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //TODO: save status && restore
             fragmentDataType = getArguments().getString(getString(R.string.fragment_period_key));
             historyData = getArguments().getString(getString(R.string.period_value_key));
         }
