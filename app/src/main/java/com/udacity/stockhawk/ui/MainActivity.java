@@ -8,12 +8,16 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -30,12 +34,12 @@ import android.widget.TextView;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
+import com.udacity.stockhawk.model.Stock;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
 import com.udacity.stockhawk.utils.NetworkUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 import static com.udacity.stockhawk.utils.NetworkUtils.isNetworkUp;
 
@@ -59,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private Snackbar noConnectionSnackbar;
 
+    private Parcelable mPreviousRecyclerViewStatus;
+
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -73,8 +79,16 @@ public class MainActivity extends AppCompatActivity implements
     };
 
     @Override
-    public void onClick(String symbol) {
-        Timber.d("Symbol clicked: %s", symbol);
+    public void onClick(StockAdapter.StockViewHolder viewHolder, Stock data) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(getString(R.string.stock_data_key), data);
+        Pair<View, String> priceViewPair = Pair.create((View) viewHolder.price, getString(R.string.stock_price_transition_name));
+        Pair<View, String> changeViewPair = Pair.create((View) viewHolder.change, getString(R.string.stock_change_transition_name));
+        Pair<View, String> cardViewPair = Pair.create(viewHolder.itemView, getString(R.string.stock_transition_name));
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this, priceViewPair, changeViewPair, cardViewPair);
+
+        ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
     }
 
     @Override
@@ -98,6 +112,10 @@ public class MainActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             QuoteSyncJob.initialize(this);
             swipeRefreshLayout.setRefreshing(true);
+        } else {
+            if (savedInstanceState.containsKey(getString(R.string.stock_layout_manager_status_key))) {
+                mPreviousRecyclerViewStatus = savedInstanceState.getParcelable(getString(R.string.stock_layout_manager_status_key));
+            }
         }
 
         getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
@@ -134,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements
 
     void addStock(String symbol) {
         if (symbol != null && !symbol.isEmpty()) {
-            if(PrefUtils.addStock(this, symbol)) {
+            if (PrefUtils.addStock(this, symbol)) {
                 if (isNetworkUp(this)) {
                     swipeRefreshLayout.setRefreshing(true);
                     swipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -164,29 +182,33 @@ public class MainActivity extends AppCompatActivity implements
         if (data.getCount() == 0) {
         } else {
         }
+        if (mPreviousRecyclerViewStatus != null) {
+            stockRecyclerView.getLayoutManager().onRestoreInstanceState(mPreviousRecyclerViewStatus);
+            mPreviousRecyclerViewStatus = null;
+        }
     }
 
     private void updateEmptyView() {
         swipeRefreshLayout.setVisibility(View.GONE);
         int message;
 
-            @QuoteSyncJob.StockStatus int status = PrefUtils.getStockStatus(this);
-            switch (status) {
-                case QuoteSyncJob.STOCK_STATUS_EMPTY:
-                    message = R.string.error_no_stocks;
-                    break;
-                case QuoteSyncJob.STOCK_STATUS_SERVER_DOWN:
-                    message = R.string.error_server_down;
-                    break;
-                case QuoteSyncJob.STOCK_STATUS_UNKNOWN:
-                    message = R.string.empty_stock_list;
-                    break;
-                default:
-                    message = R.string.loading_data;
-                    break;
-            }
-            if (!NetworkUtils.isNetworkUp(this)) message = R.string.error_no_network;
-            if (PrefUtils.getStocks(this).size() == 0) message = R.string.error_no_stocks;
+        @QuoteSyncJob.StockStatus int status = PrefUtils.getStockStatus(this);
+        switch (status) {
+            case QuoteSyncJob.STOCK_STATUS_EMPTY:
+                message = R.string.error_no_stocks;
+                break;
+            case QuoteSyncJob.STOCK_STATUS_SERVER_DOWN:
+                message = R.string.error_server_down;
+                break;
+            case QuoteSyncJob.STOCK_STATUS_UNKNOWN:
+                message = R.string.empty_stock_list;
+                break;
+            default:
+                message = R.string.loading_data;
+                break;
+        }
+        if (!NetworkUtils.isNetworkUp(this)) message = R.string.error_no_network;
+        if (PrefUtils.getStocks(this).size() == 0) message = R.string.error_no_stocks;
 
         if (adapter.getItemCount() == 0) {
             error.setText(message);
@@ -248,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements
                 return;
             }
             int stockStatus = PrefUtils.getStockStatus(this);
-            if(QuoteSyncJob.STOCK_STATUS_INVALID == stockStatus) {
+            if (QuoteSyncJob.STOCK_STATUS_INVALID == stockStatus) {
                 Snackbar.make(stockRecyclerView, getString(R.string.error_server_down_stock, symbol), Snackbar.LENGTH_LONG)
                         .setAction(getString(R.string.try_again), tryToAddAgainListener(symbol))
                         .show();
@@ -330,5 +352,12 @@ public class MainActivity extends AppCompatActivity implements
                 addStock(symbol);
             }
         };
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(getString(R.string.stock_layout_manager_status_key), stockRecyclerView.getLayoutManager().onSaveInstanceState());
+
     }
 }

@@ -1,0 +1,75 @@
+<android.support.v7.widget.GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_horizontal_margin"
+    app:columnCount="2">
+
+    <TextView
+        android:id="@+id/tv_stock_name"
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:textColor="@color/textColorPrimary"
+        android:textAlignment="center"
+        app:layout_columnSpan="2"
+        app:layout_gravity="center_horizontal"
+        tools:text="Microsoft Corporation"
+        />
+
+    <TextView
+        android:id="@+id/tv_stock_exchange"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/textColorPrimary"
+        android:textStyle="normal"
+        app:layout_columnSpan="2"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center_horizontal"
+        android:paddingBottom="@dimen/base_padding"
+        tools:text="NASDAQ"
+        />
+
+    <TextView
+        android:id="@+id/tv_stock_price"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:textColor="@color/textColorPrimary"
+        android:textStyle="normal"
+        android:transitionName="@string/stock_price_transition_name"
+        app:layout_columnWeight="1"
+        app:layout_gravity="fill_horizontal"
+        android:gravity="center_horizontal"
+        tools:text="$914.15"/>
+
+    <TextView
+        android:id="@+id/tv_day_highest"
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:textColor="@color/textColorPrimary"
+        android:textStyle="normal"
+        app:layout_columnWeight="1"
+        app:layout_gravity="fill_horizontal"
+        android:gravity="center_horizontal"
+        tools:text="$180"
+        />
+
+    <TextView
+        android:id="@+id/tv_absolute_change"
+        style="@style/Base.TextAppearance.AppCompat.Body2"
+        android:elevation="4dp"
+        android:fontFamily="sans-serif-light"
+        android:padding="3dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:transitionName="@string/stock_change_transition_name"
+        app:layout_gravity="center_horizontal"
+        tools:text="+$0.14"
+        tools:background="@color/material_green_700"/>
+
+    <TextView
+        android:id="@+id/tv_day_lowest"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:gravity="center_horizontal"
+        android:textColor="@color/textColorPrimary"
+        android:textStyle="normal"
+        app:layout_gravity="center"
+        tools:text="$94"/>
+</android.support.v7.widget.GridLayout>
