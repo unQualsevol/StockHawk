@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
+import android.support.v4.content.ContextCompat;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -80,7 +81,7 @@ public class StockWidgetService extends RemoteViewsService {
 
             DecimalFormat dollarFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
             DecimalFormat dollarFormatWithPlus = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
-            dollarFormatWithPlus.setPositivePrefix("+");
+            dollarFormatWithPlus.setPositivePrefix("+$");
             dollarFormatWithPlus.setMaximumFractionDigits(2);
             dollarFormat.setMaximumFractionDigits(2);
             dollarFormat.setMinimumFractionDigits(2);
@@ -95,7 +96,13 @@ public class StockWidgetService extends RemoteViewsService {
             }
 
             remoteViews.setTextViewText(R.id.symbol, stockSymbol);
+            //With emulator or real device I don't need to define the color but due last review
+            //I have added this to avoid an issue of having white over white
+            remoteViews.setTextColor(R.id.symbol, ContextCompat.getColor(getApplicationContext(), R.color.textColorPrimary));
             remoteViews.setTextViewText(R.id.price, dollarFormat.format(stockPrice));
+            //same here just to avoid problems but I think it was not happening as price has the
+            //proper Theme with the textColorSecondary
+            remoteViews.setTextColor(R.id.price, ContextCompat.getColor(getApplicationContext(), R.color.textColorSecondary));
             remoteViews.setTextViewText(R.id.change, dollarFormatWithPlus.format(absoluteChange));
             remoteViews.setInt(R.id.change, "setBackgroundResource", backgroundDrawable);
             remoteViews.setInt(R.id.list_item_quote, "setBackgroundResource", R.color.white);
