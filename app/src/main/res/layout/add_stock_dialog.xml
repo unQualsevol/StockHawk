@@ -11,6 +11,8 @@
         android:layout_marginBottom="@dimen/stock_dialog_margin"
         android:layout_marginLeft="@dimen/stock_dialog_margin"
         android:layout_marginRight="@dimen/stock_dialog_margin"
+        android:layout_marginStart="@dimen/stock_dialog_margin"
+        android:layout_marginEnd="@dimen/stock_dialog_margin"
         android:layout_marginTop="@dimen/stock_dialog_margin_top"
         android:hint="@string/dialog_hint"
         android:inputType="textCapCharacters" />

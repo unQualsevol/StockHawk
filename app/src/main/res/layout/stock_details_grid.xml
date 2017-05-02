@@ -70,7 +70,8 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:transitionName="@string/stock_change_transition_name"
-        tools:text="+ $0.14"/>
+        tools:text="+ $0.14"
+        tools:background="@color/material_green_700"/>
 
     <TextView
         android:id="@+id/tv_day_lowest"
